@@ -96,4 +96,4 @@ def add_to_data_handler(vehicle_type, packet_type, packet):
         this_one["FUEL"] = fuel
 
     add_to_data(file_contents)
-    print_result(file_contents)
+    # print_result(file_contents)
