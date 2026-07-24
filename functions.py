@@ -7,7 +7,6 @@ import os
 PATH = "data.json"
 CLEANING_TIME=0.5
 
-
 def get_gps(data):
 
     parsed_data_gps = struct.unpack(">BBff", data)
@@ -79,8 +78,9 @@ def print_result(data):
            gps=specs["GPS"]
            lat=gps[0]
            lon=gps[1]
+           clear_terminal()
            print(f"{name:<15} SPEED {speed:>6} km/h   FUEL {fuel:>4}%   POS {lat:>9}, {lon:>9}")
-    clear_terminal()
+
  
 def add_to_data_handler(vehicle_type, packet_type, packet):
 
@@ -101,10 +101,10 @@ def add_to_data_handler(vehicle_type, packet_type, packet):
         speed = packet
 
         this_one["SPEED"] = speed
-        # print("SPEED", this_one)
+
 
     if packet_type == 2:
-        # speed packet
+        # gps packet
         lat = packet[0]
         lon = packet[1]
 
@@ -113,7 +113,7 @@ def add_to_data_handler(vehicle_type, packet_type, packet):
         this_one["GPS"] = arr
 
     if packet_type == 3:
-        # speed packet
+        # fuel packet
         fuel = packet
         this_one["FUEL"] = fuel
 
