@@ -1,7 +1,11 @@
 import struct
 import json
+from pathlib import Path
+import time
+import os
 
-FILENAME = "data.json"
+PATH = "data.json"
+CLEANING_TIME=0.5
 
 
 def get_gps(data):
@@ -35,36 +39,54 @@ def get_name(index):
     return names_array[index]
 
 
-def print_result(full):
-    for i in full.items():
-        index = int(i[0])
-        name = get_name(index).strip()
-        elements = i[1]
-
-        speed = None
-
-        fuel = None
-        gps = None
-        lat = gps[0]
-        lon = gps[1]
-        print(
-            f"{name:<18} SPEED {speed:>6} km/h   FUEL {fuel:>4}%   POS {lat:>9}, {lon:>9}")
-
-
 def add_to_data(query):
 
-    with open(FILENAME, "w") as file:
+    with open(PATH, "w") as file:
         json.dump(query, file)
 
+def create_file():
+  with open(PATH,"w"):
+     pass
+def read_file():
+    if not os.path.exists(PATH):
+       create_file()
+    content = Path(PATH).read_text()
+    if not content:
+         add_to_data({})
+         return {}
+    with open(PATH, "r") as file:
+            data = json.load(file)
+            return data
 
+
+def clear_terminal():
+    
+    time.sleep(CLEANING_TIME)
+    print("\033[H\033[J")
+    print(f"Terminal cleaned ({CLEANING_TIME}s)")
+
+def print_result(data):
+
+    for i in data.items():
+        index = int(i[0])
+        specs = i[1]
+        specs_len = len(specs)
+        name=get_name(index)
+
+        if specs_len==3:
+           speed= specs["SPEED"]
+           fuel=specs["FUEL"]
+           gps=specs["GPS"]
+           lat=gps[0]
+           lon=gps[1]
+           print(f"{name:<15} SPEED {speed:>6} km/h   FUEL {fuel:>4}%   POS {lat:>9}, {lon:>9}")
+    clear_terminal()
+ 
 def add_to_data_handler(vehicle_type, packet_type, packet):
 
-    file_contents = None
+    file_contents = read_file()
 
     vehicle_type = str(vehicle_type)
-
-    with open(FILENAME, "r") as file:
-        file_contents = json.load(file)
 
     this_one = None
     if vehicle_type not in file_contents:
@@ -79,7 +101,7 @@ def add_to_data_handler(vehicle_type, packet_type, packet):
         speed = packet
 
         this_one["SPEED"] = speed
-        print("SPEED", this_one)
+        # print("SPEED", this_one)
 
     if packet_type == 2:
         # speed packet

@@ -14,6 +14,7 @@ def handler(first_2, data):
         speed = round(parsed_data_speed[2])
         name = get_name(vehicle_type)
         add_to_data_handler(vehicle_type, packet_type, (speed))
+        print(vehicle_type, speed, "speed")
 
     elif first_2 == "02":
         parsed_data_gps = get_gps(data)
@@ -23,8 +24,8 @@ def handler(first_2, data):
         longitiude = parsed_data_gps[3]
         name = get_name(vehicle_type)
 
-        print(type(vehicle_type), "type yoooooo")
         add_to_data_handler(vehicle_type, packet_type, (latitude, longitiude))
+        print(vehicle_type, latitude, longitiude, "gps")
 
     elif first_2 == "03":
         parsed_data_fuel = get_fuel(data)
@@ -34,7 +35,6 @@ def handler(first_2, data):
         name = get_name(vehicle_type)
         add_to_data_handler(vehicle_type, packet_type, (fuel_percent))
         print(vehicle_type, fuel_percent, "FUEL")
-    # print("\033[H\033[J")
 
 
 for i in range(300):
