@@ -2,5 +2,5 @@
 ## Details
 ### Please check out ```TASK.md``` for more details.
 ### For answers check out ```ANSWERS.md```.
-## Shoutouts
-### [@WinterCore](https://github.com/WinterCore) For creating the task of this program.
+## Shoutout
+### [@WinterCore](https://github.com/WinterCore) For writing the task of this program.
