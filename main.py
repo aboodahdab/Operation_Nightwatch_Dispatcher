@@ -3,7 +3,7 @@ from functions import get_speed, get_fuel, get_gps, get_name, add_to_data_handle
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server_socket.bind(("127.0.0.1", 50505))
 print("FLEET STATUS — 10 vehicles")
-print("-----"*30)
+print("-----"* 30)
 
 
 def handler(first_2, data):
