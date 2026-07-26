@@ -294,3 +294,79 @@ Each question checks a concept. Answer in your own words.
    Python numbers you get after `struct.unpack`? What did `unpack` actually do?
 10. Where does your program get the port number 50505 from, and what would happen
     if you listened on a different port than the sender is using?
+
+
+
+## Part 2 — Web page with a list
+ 
+Now you show the same data in a web browser instead of the terminal.
+ 
+### Important idea (read this!)
+A web browser **cannot read UDP packets**. It does not have a UDP socket. So you
+cannot connect the browser straight to the vehicles.
+ 
+The answer is to build **two programs**:
+1. A **backend** (Python). It reads the UDP packets (the same code as Part 1)
+   and keeps the newest data in memory, updated in real time. It also answers
+   requests from the browser through an **API endpoint** — a web address the
+   browser can call to get the current data.
+2. A **frontend** (HTML + JavaScript in the browser) that gets the data from
+   your endpoint and shows it on the page.
+So the data flows like this:
+ 
+```
+vehicles → (UDP) → your Python backend → (over the web) → browser page
+```
+ 
+### What you need to work out
+- A way for your Python backend to answer requests from a browser. (Python does
+  not do this on its own — research what people use to serve a web API.)
+- Your packet-reading from Part 1 has to keep running **at the same time** as the
+  part that answers the browser, and both have to share the same live data. How
+  you make two things run at once, and share data safely, is for you to solve.
+- An endpoint that hands the browser the current data for all vehicles, in a
+  form the browser's JavaScript can read.
+### Steps
+1. Bring your Part 1 packet-reading into the backend so it keeps running and
+   keeps the newest values updated while the backend also serves the web.
+2. Add an endpoint (for example `/data`) that returns the current values for all
+   vehicles.
+3. Open `/data` in your browser and check you see the data as text that changes
+   when you refresh.
+4. Build a web page that reads your endpoint and shows a list of the vehicles:
+   **name, coordinates, speed, fuel**. How the page keeps the list up to date is
+   for you to figure out.
+### Done when
+You open the page in a browser and see all 10 vehicles in a list, and the values
+keep up with the real data.
+ 
+### Questions (answer these before Part 3)
+Each question checks a concept. Answer in your own words.
+ 
+1. Why can a web browser **not** read the UDP packets directly? What can a browser
+   speak to a server instead?
+2. Your backend now does two jobs at once: receiving UDP and answering the
+   browser. If you ran both in a single loop, one after the other, what would go
+   wrong?
+3. Both jobs touch the same live data — one writes it, the other reads it. What
+   kind of bug can happen when two things use the same data at the same time, and
+   how did you avoid it?
+4. What is an **API endpoint**, really? When the browser "calls `/data`," what is
+   physically being sent and sent back?
+5. In what format does your endpoint send the data, and why is a structured text
+   format better here than, say, sending your raw bytes to the browser?
+6. Your endpoint replies with a *snapshot* — the current values at the moment it
+   was asked. Why can't the endpoint instead "stay open" and keep sending new
+   values as they arrive? (Think about how a normal web request works: ask,
+   answer, done.)
+7. The vehicles send data many times a second, but the browser only sees new
+   numbers when it asks the endpoint again. So what decides how often the page
+   updates — the sender's speed, or how often the browser asks?
+8. Which parts of your system run on your machine, and which part runs on the
+   computer of a person looking at the page? Draw the line between backend and
+   frontend.
+9. Your backend holds the latest values in memory (in a variable, not saved to
+   disk). If the backend program crashes and you restart it, what happens to
+   those values, and why?
+10. Right now, to see new numbers the browser has to ask again. What is the
+    browser doing to stay up to date, and what is one downside of that approach?
