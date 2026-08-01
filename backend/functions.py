@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 import time
 import os
-
+from redis_usage import dump_data_into_redis
 PATH = "data.json"
 CLEANING_TIME=0.5
 
@@ -85,10 +85,11 @@ def print_result(data):
 def add_to_data_handler(vehicle_type, packet_type, packet):
 
     file_contents = read_file()
-
+    print(packet,"packet")
     vehicle_type = str(vehicle_type)
-
+   
     this_one = None
+    dictionary={}
     if vehicle_type not in file_contents:
         file_contents[vehicle_type] = {}
         this_one = file_contents[vehicle_type]
@@ -99,6 +100,8 @@ def add_to_data_handler(vehicle_type, packet_type, packet):
     if packet_type == 1:
         # speed packet
         speed = packet
+        dictionary={vehicle_type:json.dumps({"SPEED":packet})}
+
 
         this_one["SPEED"] = speed
 
@@ -109,6 +112,8 @@ def add_to_data_handler(vehicle_type, packet_type, packet):
         lon = packet[1]
 
         arr = [lat, lon]
+        dictionary={vehicle_type:json.dumps({"GPS":arr})}
+
 
         this_one["GPS"] = arr
 
@@ -116,6 +121,12 @@ def add_to_data_handler(vehicle_type, packet_type, packet):
         # fuel packet
         fuel = packet
         this_one["FUEL"] = fuel
+        dictionary={vehicle_type:json.dumps({"FUEL":packet})}
 
     add_to_data(file_contents)
+    print(dictionary)
     print_result(file_contents)
+    dump_data_into_redis(dictionary)
+
+
+
