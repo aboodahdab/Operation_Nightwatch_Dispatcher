@@ -1,17 +1,23 @@
 const socket = io("http://localhost:4000/");
-// async function getData() {
-//   const data = await fetch("/get_data");
-//   const jsoned_data = await data.json();
-//   console.log(jsoned_data);
-// }
-console.log("hi")
-socket.on("connect",()=>{
-    console.log("ali",socket.id)
-})
-socket.on("Data",(data)=>{
-console.log("whyy")
+let obj = {};
 
-console.log(data,"data ()")
-})
+socket.on("connect", () => {
+  console.log("Connected to socket:", socket.id);
+});
+socket.on("Data", (data) => {
 
-// window.onload = getData();
+  key = Object.keys(data)[0];
+  // the key serves as the car's id
+  value = Object.values(data)[0];
+
+  value2 = JSON.parse(value);
+  type = Object.keys(value2)[0];
+  data = Object.values(value2)[0];
+  dataDecorater(key,type,data)
+});
+function dataDecorater(key, type, data) {
+  obj[key] = {};
+  const this_vehicle = obj[key];
+  this_vehicle[type] = data;
+  console.log(obj, "obj k");
+}

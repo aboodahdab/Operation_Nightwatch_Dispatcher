@@ -37,9 +37,9 @@ def handler(first_2, data):
         print(vehicle_type, fuel_percent, "FUEL")
 
 
-for i in range(30):
+while True:
 
-    data, addr = server_socket.recvfrom(1024)  # receive up to 1024 bytes
+    data,addr = server_socket.recvfrom(1024)  # receive up to 1024 bytes
     value = data.hex()
     first_2 = value[:2]
     handler(first_2, data)

@@ -36,6 +36,11 @@ FUEL_FMT  = ">BBI"    # type, id, fuel_percent
 
 TYPE_SPEED, TYPE_GPS, TYPE_FUEL = 1, 2, 3
 
+# Coordinates are folded into these symmetric ranges, so a vehicle that walks
+# off one edge reappears on the opposite one (lat +90 -> -90, lon +180 -> -180).
+LAT_LIMIT = 90.0
+LON_LIMIT = 180.0
+
 # id -> (name, kind, start_lat, start_lon, cruising_kmh, step)
 #   kind is just flavor. 'step' scales how far it moves per cycle
 #   (planes move faster / farther than ground vehicles).
@@ -52,6 +57,12 @@ FLEET = {
     9: ("Night Owl",        "plane", 40.71, -74.01, 800,  0.092),
 }
 # ---------------------------------------------------------------------------
+
+
+def wrap(value, limit):
+    """Fold value into [-limit, limit); +limit comes out as -limit."""
+    span = 2 * limit
+    return (value + limit) % span - limit
 
 
 class Vehicle:
@@ -71,14 +82,9 @@ class Vehicle:
         # wander: nudge heading a little each cycle for an organic path
         self.heading += random.uniform(-0.3, 0.3)
 
-        # steer back toward home if we've strayed too far, so paths stay local
-        dlat = self.lat - self.home[0]
-        dlon = self.lon - self.home[1]
-        if math.hypot(dlat, dlon) > 1.5:
-            self.heading = math.atan2(-dlat, -dlon)
-
-        self.lat += math.cos(self.heading) * self.step
-        self.lon += math.sin(self.heading) * self.step
+        # roam freely; walking off an edge reappears on the opposite one
+        self.lat = wrap(self.lat + math.cos(self.heading) * self.step, LAT_LIMIT)
+        self.lon = wrap(self.lon + math.sin(self.heading) * self.step, LON_LIMIT)
 
         # fuel slowly burns; refuel when low
         self.fuel -= random.uniform(0.2, 0.6)

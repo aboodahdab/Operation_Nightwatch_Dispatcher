@@ -7,18 +7,18 @@ from flask_socketio import SocketIO
 app = Flask(__name__, static_folder="../frontend/style",
             template_folder="../frontend/templates")
 r = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
-socketio=SocketIO(app)
+socketio = SocketIO(app)
+
 
 def run_flask():
     app.run(debug=False, port=4000)
-
 
 redis_data_arr = []
 
 
 def redis_waiter():
     last_id = "0"
-    print("yes im working guys", last_id)
+    print("REDIS IS WORKING.")
     while True:
 
         response = r.xread({"data": last_id}, block=6500, count=15)
@@ -28,12 +28,9 @@ def redis_waiter():
                 last_id = entry_id
 
                 print(fields)
-                redis_data_arr.append(fields)
-                print("yessss")
-                if len(redis_data_arr)>=10:
-                    socketio.emit("Data", {"value": redis_data_arr})
 
-
+                print("--"*14)
+                socketio.emit("Data", fields)
 
 
 @app.route("/")
@@ -41,21 +38,11 @@ def Homepage():
     return render_template("homepage.html", file="main.js")
 
 
-# @app.route("/get_data")
-# def get_data():
-#     global redis_data_arr
-#     sent_data = redis_data_arr
 
-#     redis_data_arr = []
-
-#     return jsonify({"arr": sent_data})
-
-
-# print(redis_data_arr)
 
 
 def start_socket():
-    socketio.run(app, debug=False,port=4000)
+    socketio.run(app, debug=False, port=4000)
 
 
 if __name__ == "__main__":
