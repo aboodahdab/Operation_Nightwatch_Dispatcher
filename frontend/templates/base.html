@@ -4,11 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="../style/css/style.css" />
-  </head>
-  <body>
-    {% block body %}{% endblock %}
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script>
+      tailwind.config = {
+        theme: { extend: { colors: {} } },
+      };
+    </script>
+  </head>
+  <body class="bg-black-color text-white w-full h-[100vh]">
+    <ul id="ul"></ul>
+    {% block body %}{% endblock %}
     <script src="{{ url_for('static', filename='js/'+file ) }}"></script>
   </body>
 </html>

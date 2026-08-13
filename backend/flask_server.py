@@ -4,7 +4,7 @@ import json
 import threading
 from flask_socketio import SocketIO
 
-app = Flask(__name__, static_folder="../frontend/style",
+app = Flask(__name__,static_folder="../frontend/style",
             template_folder="../frontend/templates")
 r = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
 socketio = SocketIO(app)
@@ -31,6 +31,7 @@ def redis_waiter():
 
                 print("--"*14)
                 socketio.emit("Data", fields)
+
 
 
 @app.route("/")
