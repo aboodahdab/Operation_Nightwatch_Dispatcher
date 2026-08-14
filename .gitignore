@@ -1,2 +1,4 @@
 /backend/venv
 /backend/data.json
+node_modules
+/frontend/style/css/output.css

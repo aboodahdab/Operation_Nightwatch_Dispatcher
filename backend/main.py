@@ -1,9 +1,10 @@
 import socket
 from functions import get_speed, get_fuel, get_gps, get_name, add_to_data_handler
+
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server_socket.bind(("127.0.0.1", 50505))
 print("FLEET STATUS — 10 vehicles")
-print("-----"* 30)
+print("-----" * 20)
 
 
 def handler(first_2, data):
@@ -39,7 +40,7 @@ def handler(first_2, data):
 
 while True:
 
-    data,addr = server_socket.recvfrom(1024)  # receive up to 1024 bytes
+    data, addr = server_socket.recvfrom(1024)  # receive up to 1024 bytes
     value = data.hex()
     first_2 = value[:2]
     handler(first_2, data)

@@ -73,6 +73,7 @@ def print_result(data):
         index = int(i[0])
         specs = i[1]
         specs_len = len(specs)
+
         name = get_name(index)
 
         if specs_len == 3:

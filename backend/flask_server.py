@@ -27,7 +27,7 @@ def redis_waiter():
             for entry_id, fields in value:
                 last_id = entry_id
 
-                print(fields)
+                print("Received:",fields)
 
                 print("--"*14)
                 socketio.emit("Data", fields)
@@ -43,6 +43,7 @@ def Homepage():
 
 
 def start_socket():
+    print("Starting Flask:")
     socketio.run(app, debug=False, port=4000)
 
 
