@@ -1,6 +1,7 @@
 # Operation_Nightwatch_Dispatcher
 ## How to run: 
 ### First create a folder ```mkdir NightWatch_Dispatcher_py```
+### Then Navigate to it ```cd NightWatch_Dispatcher_py```
 ### Next clone this repo ```git clone git@github.com:aboodahdab/Operation_Nightwatch_Dispatcher.git```
 ### Then install required dependencies ```npm install```
 ### Next navigate to the frontend ```cd frontend```
