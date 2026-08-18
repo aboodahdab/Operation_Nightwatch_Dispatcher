@@ -370,3 +370,58 @@ Each question checks a concept. Answer in your own words.
    those values, and why?
 10. Right now, to see new numbers the browser has to ask again. What is the
     browser doing to stay up to date, and what is one downside of that approach?
+
+
+---
+ 
+## Part 3 — Show the vehicles on a map (Google Maps)
+ 
+Now put the vehicles on a real map, at their real coordinates, and let them move.
+ 
+### What you need to work out
+- A **Google Maps API key**. Google Maps needs a free key to work in a web page.
+  This is the one thing you can't guess — search "Google Maps JavaScript API get
+  API key". (Ask me — I can help set this up, or give you a key.)
+- How to put a Google map on your page and place a point on it for each vehicle.
+  (Google's map library can do both — research how.)
+- A source for each vehicle's current position. Think about what you already
+  built in Part 2.
+### Steps
+1. Add a map to your page centered on the middle of the fleet.
+2. Place one point (a marker) for each vehicle at its current coordinates.
+3. As new data comes in, **move each marker** to its new position. The vehicles
+   will appear to drive.
+4. Nice touch: show the vehicle name (and speed/fuel) when you click a marker.
+### Done when
+You see 10 markers on a real map, each with the right name, and they move on
+their own as new data arrives.
+ 
+### Questions (answer these before Part 4)
+Each question checks a concept. Answer in your own words.
+ 
+1. Why does Google Maps need an **API key**? What is the key actually for, from
+   Google's point of view?
+2. A marker needs to know where to appear. Which two numbers place it, and which
+   packet type do they come from?
+3. The map needs each vehicle's current position. You already built something in
+   Part 2 that provides exactly that. What is it, and why does that mean the
+   backend needs no changes for this part?
+4. The map runs as JavaScript in the browser, but the vehicle data comes from
+   your Python backend. How does a number that started as bytes over UDP end up
+   moving a marker on screen? Trace the whole path.
+5. To make a marker "move," do you create a new marker each update or change the
+   existing one? What would go wrong if you did it the other way?
+6. Latitude and longitude are just two numbers. How does the map turn them into a
+   pixel position on the screen? (You don't need the math — explain the idea.)
+7. The vehicle coordinates change by tiny amounts each update. Why does the
+   marker still appear to move smoothly-ish, and what would make the movement look
+   jumpy instead?
+8. If the backend sent a latitude the map considers invalid (say, 999), what
+   would you expect to see, and whose job is it to catch that — backend or
+   frontend?
+9. The API key sits in your HTML, which anyone visiting the page can read. Why is
+   that a concern, and what do real sites do about it?
+10. Nothing about the *sender* changed between Part 1 and Part 3 — the same bytes
+    are on the wire. So what actually changed to get from a terminal to a live
+    map? Name the layers you added.
+---
