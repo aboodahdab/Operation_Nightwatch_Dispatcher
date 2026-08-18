@@ -2,3 +2,6 @@
 /backend/data.json
 node_modules
 /frontend/style/css/output.css
+
+/backend/.env
+*.env

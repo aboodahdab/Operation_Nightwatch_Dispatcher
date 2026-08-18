@@ -13,5 +13,11 @@
   <body class="bg-black-color text-white w-full h-[100vh]">
     {% block body %}{% endblock %}
     <script src="{{ url_for('static', filename='js/'+file ) }}"></script>
+    <!-- add your key -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=marker&callback=initMap"
+      async
+      defer
+    ></script>
   </body>
 </html>
