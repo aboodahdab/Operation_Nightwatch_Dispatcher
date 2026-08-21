@@ -425,3 +425,73 @@ Each question checks a concept. Answer in your own words.
     are on the wire. So what actually changed to get from a terminal to a live
     map? Name the layers you added.
 ---
+
+## Part 4 — Save the history and draw the routes
+ 
+Until now you only kept the **newest** position. In this part the backend
+**remembers** where each vehicle has been, and the map draws the path it drove.
+ 
+### What you need to work out
+- A way for the backend to **remember every past position** of each vehicle, not
+  just the newest one — adding to it each time a GPS packet arrives. (Think about
+  how to stop it from growing forever.)
+- A way for the browser to get that full history, separately from the current
+  data.
+- A way to draw a path on the map as a line through many points. (Google's map
+  library can draw lines — research how.)
+### Steps
+1. Change your backend storage so each vehicle keeps its past positions, not only
+   the latest one.
+2. Add a way for the browser to request that history (a second endpoint, for
+   example `/history`).
+3. On the frontend, get the history and draw one line per vehicle through its
+   points, keeping it up to date as new points arrive.
+4. Now you can see the marker (where it is now) **and** the line (where it has
+   been).
+### Done when
+Each vehicle shows a line on the map for the road it has traveled, and the line
+grows as the vehicle keeps moving.
+ 
+### Questions (answer these)
+Each question checks a concept. Answer in your own words.
+ 
+1. What is the difference between storing only the **newest** position (Parts
+   1–3) and storing a **history**? What does the history let you do that a single
+   value can't?
+2. The history grows every time a packet arrives. What eventually goes wrong if
+   you never limit it, and what does "limit" cost you when you do?
+3. Why store the history on the **backend** instead of in the browser? What
+   breaks if each visitor's browser kept its own history instead?
+4. Why add a second endpoint for history instead of putting everything into
+   `/data`? Think about how much data each one returns and how often it's needed.
+5. The path drawn on the map looks like one smooth line, but what is it really
+   made of underneath?
+6. Two people open your page at the same time. Do they see the same history? Why
+   or why not — where does the "one true history" live?
+7. Your `/data` endpoint returns a small snapshot; `/history` returns something
+   that keeps growing. Why is it worth keeping them separate rather than always
+   sending everything?
+8. Why does the history vanish when you restart the backend? What is it about
+   "in memory" that makes it temporary?
+9. To make the history survive a restart, you'd save it outside the program.
+   What are you actually writing out, and what would you have to do on startup to
+   get it back?
+10. UDP can drop packets, so a GPS point can go missing. How would a lost point
+    show up in the drawn route, and would the line be *wrong* or just *rougher*?
+### Optional upgrade
+Right now the history is only in memory, so it disappears when you restart the
+backend. As an upgrade, save the positions somewhere permanent (a file, or a
+database) so the history stays after a restart.
+ 
+---
+ 
+## Bonus ideas (any time)
+ 
+- **Low-fuel warning.** Turn a vehicle red when its fuel is under 15%.
+- **Lost signal.** UDP loses some packets — no error, they just do not arrive.
+  Show "SIGNAL LOST" for a vehicle if no packet has come for a few seconds.
+- **Handle surprises** without crashing — an unknown type, or an id that is not
+  in your list (show it as `Unknown (id N)`).
+- **Live push updates.** Look into **WebSockets** so the backend can push new
+  data to the page the moment it arrives, instead of the page asking for it.
+---
