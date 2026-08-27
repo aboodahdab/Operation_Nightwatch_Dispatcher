@@ -6,6 +6,8 @@
 ### Then install required dependencies ```npm install```
 ### Next navigate to the frontend ```cd frontend```
 ### After that run Tailwind's CLI ```npx @tailwindcss/cli -i style/css/input.css -o style/css/output.css --watch```
+### Next get a google maps js API key from [Google Cloud Console](https://developers.google.com/maps/documentation/javascript/get-api-key)
+### Then open the ```base.html``` file and replace ```YOUR_API_KEY``` with the API key you got.
 ### Next open a new terminal
 ### Then navigate to the backend ```cd backend```
 ### After that make a virtual environment for python ```python3 -m venv venv```
@@ -18,7 +20,7 @@
 ### Installation
 ### - Ubuntu/Debian: `sudo apt install redis-server -y`
 ### - RHEL/CentOS/Fedora: `sudo dnf install redis -y`
-### - macOS: `brew install redis`
+### - macOS: `brew install redis`   
 ### Enabling
 ### - Ubuntu/Debian: `sudo systemctl enable --now redis-server`
 ### - RHEL/CentOS/Fedora: `sudo systemctl enable --now redis`
