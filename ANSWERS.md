@@ -21,5 +21,28 @@
 ### And if listening on another port,you could get data sent another server or get absolutely nothing (depending if there is another server using that port)
 
 ## Part 2:
+## "Why can a web browser not read the UDP packets directly? What can a browser speak to a server instead?""
+### Cuz the browser does not have a UDP socket. So it cannot read the UDP packets directly. 
+## "Your backend now does two jobs at once: receiving UDP and answering the browser. If you ran both in a single loop, one after the other, what would go wrong?"
+### If you run both in a single loop then the first will keep working forever so the second won't even have a chance to start (that is because the program does not stop and it needs to stop to let the loop go to the second program)
+### "Both jobs touch the same live data — one writes it, the other reads it. What kind of bug can happen when two things use the same data at the same time, and how did you avoid it?"
+## There is a bug that happens when a program reads and other writes at the same exact time (I think it's simply that the DATA CHANGES while the reading process is still working)
+## "What is an API endpoint, really? When the browser "calls /data," what is physically being sent and sent back?"
+### So. An API endpoint is an instruction for a port. when someone calls /data for example it returns {"foo":123} for example and what's getting sent is the method type and the endpoint (for exapmle GET and /data) what's getting sent back is the data (or whatever does the api endpoint return)
+## "In what format does your endpoint send the data, and why is a structured text format better here than, say, sending your raw bytes to the browser?"
+### It sends them in JSON. because let's just say that we will have to re-decode these packets. and that is performance and time wasting
+## "Your endpoint replies with a snapshot — the current values at the moment it was asked. Why can't the endpoint instead "stay open" and keep sending new values as they arrive? (Think about how a normal web request works: ask, answer, done.)"
+### I think it does because I used web sockets but the original TASK.md uses polling and needs to call the API endpoint every 5 seconds.
+## "The vehicles send data many times a second, but the browser only sees new numbers when it asks the endpoint again. So what decides how often the page updates — the sender's speed, or how often the browser asks?"
+### First of all,because we used web sockets we don't have to encounter this. 
+### Second of all I think it updates when the browser asks to. Think of it, imagine having the data go into redis then flask gets it and it gets put in the data array but never sent to the browser. So the one controlling the refresh times is the browser. But with web sockets (our case) the one controlling the refresh times is the backend.
+## "Which parts of your system run on your machine, and which part runs on the computer of a person looking at the page? Draw the line between backend and frontend."
+### Firstly, the sender + receiver + redis + flask (the API handler) + the sending socket, all run on my machine. But the websocket listening for sent data runs on the user's machine and the frontend HTML,CSS,JS code run at the user's machine
+### We have two parts of the socket here. The sender (flask socketio) and the listener , (js socketio) listens for updates, runs on the user's own machine.
+## "Your backend holds the latest values in memory (in a variable, not saved to disk). If the backend program crashes and you restart it, what happens to those values, and why?"
+### They will vanish! Because variables live in ram and ram restarts whenever you start the program. But files live on the disk (ssd or nvme storage) and they are saved so if you restart your program they don't disappear.
+## "Right now, to see new numbers the browser has to ask again. What is the browser doing to stay up to date, and what is one downside of that approach?"
+### As I said that was before using web sockets.
+### It was calling the API every 5 seconds and the downsides are that it uses more data (internet) and uses more cpu cycles (inefficent) I guess. + annoying the API.
 ## Part 3:
 ## Part 4:
