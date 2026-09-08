@@ -35,8 +35,8 @@
 ### After that run the flask server ```python3 flask_server.py``` 
 ### Finally open your browser at port 4000 ```http://localhost:4000/```
 
-## Details
+## Details:
 ### Please check out ```TASK.md``` for more details.
 ### For answers check out ```ANSWERS.md```
-## Shoutout
+## Shoutout:
 ### For [@WinterCore](https://github.com/WinterCore) For writing the ```TASK.md``` file of this program and reviewing the answers.
