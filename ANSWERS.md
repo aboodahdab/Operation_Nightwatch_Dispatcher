@@ -37,12 +37,38 @@
 ### First of all,because we used web sockets we don't have to encounter this. 
 ### Second of all I think it updates when the browser asks to. Think of it, imagine having the data go into redis then flask gets it and it gets put in the data array but never sent to the browser. So the one controlling the refresh times is the browser. But with web sockets (our case) the one controlling the refresh times is the backend.
 ## "Which parts of your system run on your machine, and which part runs on the computer of a person looking at the page? Draw the line between backend and frontend."
-### Firstly, the sender + receiver + redis + flask (the API handler) + the sending socket, all run on my machine. But the websocket listening for sent data runs on the user's machine and the frontend HTML,CSS,JS code run at the user's machine
-### We have two parts of the socket here. The sender (flask socketio) and the listener , (js socketio) listens for updates, runs on the user's own machine.
+### Firstly, the sender + receiver + Redis + Flask (the API handler) + the sending socket, all run on my machine. But the websocket listening for sent data runs on the user's machine and the frontend (HTML,CSS,Js) runs at the user's machine
+### We have two parts of the socket here. The sender (flask socketio) and the listener , (Js socketio) listens for updates, runs on the user's own machine.
 ## "Your backend holds the latest values in memory (in a variable, not saved to disk). If the backend program crashes and you restart it, what happens to those values, and why?"
 ### They will vanish! Because variables live in ram and ram restarts whenever you start the program. But files live on the disk (ssd or nvme storage) and they are saved so if you restart your program they don't disappear.
 ## "Right now, to see new numbers the browser has to ask again. What is the browser doing to stay up to date, and what is one downside of that approach?"
 ### As I said that was before using web sockets.
 ### It was calling the API every 5 seconds and the downsides are that it uses more data (internet) and uses more cpu cycles (inefficent) I guess. + annoying the API.
+
 ## Part 3:
-## Part 4:
+## "Why does Google Maps need an API key? What is the key actually for, from Google's point of view?"
+### To track user's usage and know if they have reached the limit.
+### "A marker needs to know where to appear. Which two numbers place it, and which packet type do they come from?"
+### Latitude and longitude.
+### They come from the GPS packet (index 1)
+## "The map needs each vehicle's current position. You already built something in Part 2 that provides exactly that. What is it, and why does that mean the backend needs no changes for this part?"
+### We built the Flask server connected to Redis in Part 2 that sends data to the frontend so we don't need to edit anything with the backend for this part.
+## "The map runs as JavaScript in the browser, but the vehicle data comes from your Python backend. How does a number that started as bytes over UDP end up moving a marker on screen? Trace the whole path."
+### the fleet server sends data to port 127.0.0.1 (localhost) then the main receives it and puts it in a .json file then we take the sent data and  dump it into redis next redis sends flask the data and flask sends it to the user using web sockets.
+## "To make a marker "move," do you create a new marker each update or change the existing one? What would go wrong if you did it the other way?"
+### I change the exisiting one's position
+### I think both work.
+## "Latitude and longitude are just two numbers. How does the map turn them into a pixel position on the screen? (You don't need the math — explain the idea.)"
+### Latitude is the vertical line and longitude is the horizontal line, latitude tells us if the area is in the south/north and longtitude is for east/west 
+### together they define a point. Example: latitude 30 (north of the equator by 30) and longitude 40 (east of the prime medrian by 40)
+## "The vehicle coordinates change by tiny amounts each update. Why does the marker still appear to move smoothly-ish, and what would make the movement look jumpy instead?"
+### Moving very fast will make the marker almost teleport and having a bad internet connection or having a slow server makes it also look jumpy.
+## "If the backend sent a latitude the map considers invalid (say, 999), what would you expect to see, and whose job is it to catch that — backend or frontend?"
+### then the marker will end up in the arctic ocean at the very north of the map. above Russia green land and canada.
+### And I think it's the frontend's job to handle this.
+## "The API key sits in your HTML, which anyone visiting the page can read. Why is that a concern, and what do real sites do about it?"
+### Because anyone visitng the website can see it, copy it, use it, and you will need to pay because it's YOUR KEY.
+### Real sites limit their API key for their domain only. For example "nightwatch.dispatcher.dev"
+## "Nothing about the sender changed between Part 1 and Part 3 — the same bytes are on the wire. So what actually changed to get from a terminal to a live map? Name the layers you added." 
+### We added a reciver that recied data from the sender then we added redis and flask. Redis's job is to take the data from the reciver and give it to flask next flask sends data to the frontend using a web socket.
+## Part 4: Coming soon
