@@ -1,10 +1,13 @@
 import socket
 from functions import get_speed, get_fuel, get_gps, get_name, add_to_data_handler
 
+
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server_socket.bind(("127.0.0.1", 50505))
 print("FLEET STATUS — 10 vehicles")
-print("-----" * 20)
+print("=====" * 20)
+
+# example: 0.4
 
 
 def handler(first_2, data):
@@ -14,7 +17,10 @@ def handler(first_2, data):
         vehicle_type = int(parsed_data_speed[1])
         speed = round(parsed_data_speed[2])
         name = get_name(vehicle_type)
-        add_to_data_handler(vehicle_type, packet_type, (speed))
+
+        add_to_data_handler(vehicle_type, packet_type,
+                            (speed))
+
         print(vehicle_type, speed, "SPEED")
 
     elif first_2 == "02":
@@ -25,7 +31,8 @@ def handler(first_2, data):
         longitiude = parsed_data_gps[3]
         name = get_name(vehicle_type)
 
-        add_to_data_handler(vehicle_type, packet_type, (latitude, longitiude))
+        add_to_data_handler(vehicle_type, packet_type,
+                            (latitude, longitiude))
         print(vehicle_type, latitude, longitiude, "GPS")
 
     elif first_2 == "03":
@@ -34,13 +41,22 @@ def handler(first_2, data):
         vehicle_type = int(parsed_data_fuel[1])
         fuel_percent = parsed_data_fuel[2]
         name = get_name(vehicle_type)
-        add_to_data_handler(vehicle_type, packet_type, (fuel_percent))
+
+        add_to_data_handler(vehicle_type, packet_type,
+                            (fuel_percent))
+
         print(vehicle_type, fuel_percent, "FUEL")
 
 
-while True:
+def start_program():
+    while True:
 
-    data, addr = server_socket.recvfrom(1024)  # receive up to 1024 bytes
-    value = data.hex()
-    first_2 = value[:2]
-    handler(first_2, data)
+        data, addr = server_socket.recvfrom(1024)  # receive up to 1024 bytes
+        value = data.hex()
+        first_2 = value[:2]
+        handler(first_2, data)
+
+
+if __name__ == "__main__":
+
+    start_program()

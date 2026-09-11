@@ -1,7 +1,11 @@
 /backend/venv
 /backend/data.json
+*.json
 node_modules
 /frontend/style/css/output.css
 
 /backend/.env
 *.env
+*.tmp
+/backend/*.tmp
+/backend/timing.txt

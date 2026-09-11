@@ -2,8 +2,11 @@ import struct
 import json
 from pathlib import Path
 import os
+import uuid
+import time
 from redis_usage import dump_data_into_redis
 PATH = "data.json"
+HISTORY_FILE_PATH = "coords_History.json"
 
 
 def get_gps(data):
@@ -37,25 +40,31 @@ def get_name(index):
     return names_array[index]
 
 
-def add_to_data(query):
+def add_to_data(path, query):
+    if path == HISTORY_FILE_PATH:
+        tmp = f"{path}.{uuid.uuid4().hex}"
+        with open(tmp, "w") as f:
+            json.dump(query, f, indent=2)
+        os.replace(tmp, path)  # atomic swap, no partial-write window
+        return
 
-    with open(PATH, "w") as file:
+    with open(path, "w") as file:
         json.dump(query, file)
 
 
-def create_file():
-    with open(PATH, "w"):
+def create_file(path):
+    with open(path, "w"):
         pass
 
 
-def read_file():
-    if not os.path.exists(PATH):
-        create_file()
-    content = Path(PATH).read_text()
+def read_file(path):
+    if not os.path.exists(path):
+        create_file(path)
+    content = Path(path).read_text()
     if not content:
-        add_to_data({})
+        add_to_data(path, {})
         return {}
-    with open(PATH, "r") as file:
+    with open(path, "r") as file:
         data = json.load(file)
         return data
 
@@ -63,7 +72,8 @@ def read_file():
 def clear_terminal():
 
     print("\033[H\033[J")
-    print(f"Terminal cleaned.")
+    print("FLEET STATUS — 10 vehicles")
+    print("=====" * 20)
 
 
 def print_result(data):
@@ -86,10 +96,15 @@ def print_result(data):
                 f"{name:<15} SPEED {speed:>6} km/h   FUEL {fuel:>4}%   POS {lat:>9}, {lon:>9}")
 
 
-def add_to_data_handler(vehicle_type, packet_type, packet):
+def history_handler(vehicle_type, arr):
+    # every 4 hours = 14400
+    dump_data_into_redis("history", {vehicle_type: json.dumps(arr)})
+    return
 
-    file_contents = read_file()
-    print(packet, "packet")
+
+def add_to_data_handler(vehicle_type, packet_type, packet):
+    # start time is 4.6 for example:
+    file_contents = read_file(PATH)
     vehicle_type = str(vehicle_type)
 
     this_one = None
@@ -112,10 +127,10 @@ def add_to_data_handler(vehicle_type, packet_type, packet):
         # gps packet
         lat = packet[0]
         lon = packet[1]
-
         arr = [lat, lon]
-        dictionary = {vehicle_type: json.dumps({"GPS": arr})}
 
+        history_handler(vehicle_type, arr, )
+        dictionary = {vehicle_type: json.dumps({"GPS": arr})}
         this_one["GPS"] = arr
 
     if packet_type == 3:
@@ -124,7 +139,7 @@ def add_to_data_handler(vehicle_type, packet_type, packet):
         this_one["FUEL"] = fuel
         dictionary = {vehicle_type: json.dumps({"FUEL": packet})}
 
-    add_to_data(file_contents)
-    print(dictionary)
+    add_to_data(PATH, file_contents)
+
     print_result(file_contents)
-    dump_data_into_redis(dictionary)
+    dump_data_into_redis("data", dictionary)
