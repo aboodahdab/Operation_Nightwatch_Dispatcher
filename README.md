@@ -38,5 +38,9 @@
 ## Details:
 ### Please check out ```TASK.md``` for more details.
 ### For answers check out ```ANSWERS.md```
+## Tech Stack
+### - Frontend: JavaScript, Google maps API, Tailwind CSS
+### - Backend: Python, Flask
+### - Data transport: Redis, Flask-socketio, socketio
 ## Shoutout:
 ### For [@WinterCore](https://github.com/WinterCore) For writing the ```TASK.md``` file of this program and reviewing the answers.
