@@ -36,8 +36,8 @@
 ### Finally open your browser at port 4000 ```http://localhost:4000/```
 
 ## Details:
-### Please check out ```TASK.md``` for more details.
-### For answers check out ```ANSWERS.md```
+### Please check out [TASK.md](./TASK.md) for more details.
+### For answers check out [ANSWERS.md](./ANSWERS.md).
 ## Tech Stack
 ### - Frontend: JavaScript, Google maps API, Tailwind CSS
 ### - Backend: Python, Flask
