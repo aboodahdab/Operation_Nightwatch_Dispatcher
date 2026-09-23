@@ -1,4 +1,6 @@
-# Answers of TASK.md:
+# Answers of [TASK.md](./TASK.md)'s questions:
+## Note:
+### Before reading this please check out [TASK.md](./TASK.md).
 ## Part 1:
 ## "Why must you read byte 0 (the type) before you can read the rest of the packet? What would go wrong if you always assumed every packet was 6 bytes?":
 ### Because you won't know if this is a gps,speed,or fuel packet You won't be able to parse them, for example the gps packet is 10 bytes and it contains latitiude and longitiude, how would you know that this is a gps packet and it contains latitude and longititude if you haven't read the first byte (the type)
