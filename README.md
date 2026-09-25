@@ -50,4 +50,4 @@
 - [x] **Live push updates.**
 
 ## Shoutout:
-### For [@WinterCore](https://github.com/WinterCore) For writing the ```TASK.md``` file of this program and reviewing the answers.
+### For [@WinterCore](https://github.com/WinterCore) For coming up with the idea of this project, writing the ```TASK.md``` file, and reviewing the answers.
