@@ -73,4 +73,31 @@
 ### Real sites limit their API key for their domain only. For example "nightwatch.dispatcher.dev"
 ## "Nothing about the sender changed between Part 1 and Part 3 — the same bytes are on the wire. So what actually changed to get from a terminal to a live map? Name the layers you added." 
 ### We added a reciver that recied data from the sender then we added redis and flask. Redis's job is to take the data from the reciver and give it to flask next flask sends data to the frontend using a web socket.
-## Part 4: Coming soon
+## Part 4:
+## "What is the difference between storing only the newest position (Parts 1–3) and storing a history? What does the history let you do that a single value can't?":"
+### Genuinely a history covers all past positions. So you can know that vehicle A was in berlin 2 hours ago for example.
+## "The history grows every time a packet arrives. What eventually goes wrong if you never limit it, and what does "limit" cost you when you do?"
+### If you don't ever limit the history then it will crash your ram because you simply ran out of ram.
+### Limits make the history smaller. for example instead of 12 hours it becomes 8. 
+## "Why store the history on the backend instead of in the browser? What breaks if each visitor's browser kept its own history instead?"
+### It's the backend job to store things and for larger projects we gotta use a database.
+### Every visitor will have a different history if the history was kept on the user's device.
+## "Why add a second endpoint for history instead of putting everything into /data? Think about how much data each one returns and how often it's needed.":
+### Because the history needs to be sent only when a new GPS packet arrives. So it's genuinely useless to share an endpoint.
+### Bonus: In the project we're serving the files to JavaScript and then JavaScript organizes the data and sends it back to then backend using an endpoint then we put it in the history file.
+### It's purely for performance since the other option was sending the whole file everytime and that will lag my laptop.
+## "The path drawn on the map looks like one smooth line, but what is it really made of underneath?":
+### Polylines use points (coordinates) and then it draws a line from a point to another and if you change the order of these points you might get a completely different shape
+## "Two people open your page at the same time. Do they see the same history? Why or why not — where does the "one true history" live?":
+### They do. Because the history is saved in the backend inside a file and the backend shares it with everybody.
+## "Your /data endpoint returns a small snapshot; /history returns something that keeps growing. Why is it worth keeping them separate rather than always sending everything?":
+### Because the history needs to be sent only when a new GPS packet arrives. And to make the frontend code simpler.
+### Bonus: Instead of polling we are using websockets to send the data so we don't have API endpoints like /data or /history.
+## "Why does the history vanish when you restart the backend? What is it about "in memory" that makes it temporary?'
+### Variables are stored RAM and the RAM deletes everything when restarting.
+## "To make the history survive a restart, you'd save it outside the program. What are you actually writing out, and what would you have to do on startup to get it back?":
+### We write it to a file and then read it back on startup.
+## "UDP can drop packets, so a GPS point can go missing. How would a lost point show up in the drawn route, and would the line be wrong or just rougher?"
+### It will just be rougher.
+### If you add more points to the polyline you make it more detailed but If you add a little bit less then it still appears on map but becomes less detailed.
+
