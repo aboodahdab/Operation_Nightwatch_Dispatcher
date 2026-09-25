@@ -38,9 +38,16 @@
 ## Details:
 ### Please check out [TASK.md](./TASK.md) for more details.
 ### For answers check out [ANSWERS.md](./ANSWERS.md).
+
 ## Tech Stack
 ### - Frontend: JavaScript, Google maps API, Tailwind CSS
 ### - Backend: Python, Flask
 ### - Data transportation: Redis, Flask-socketio, socketio
+## Bonus ideas:
+- [x] **Low-fuel warning.**
+- [ ] **Lost signal.**
+- [ ] **Handle surprises**
+- [x] **Live push updates.**
+
 ## Shoutout:
 ### For [@WinterCore](https://github.com/WinterCore) For writing the ```TASK.md``` file of this program and reviewing the answers.
